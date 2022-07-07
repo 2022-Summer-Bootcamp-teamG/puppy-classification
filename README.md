@@ -1,4 +1,3 @@
-# dog-classification
 
 # :dog: 지구멍(지구의 멍멍이들)
 
