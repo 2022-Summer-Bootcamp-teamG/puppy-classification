@@ -1,20 +1,20 @@
 version: "3.9"
 
 services:
-  #   flask:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   command: gunicorn --bind 0.0.0.0:5000 app:app
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - ./backend/:/backend/
-  #   env_file:
-  #     - ./settings/dev/.env.dev
-  #   depends_on:
-  #     - mysql_db
-  #   restart: always
+    flask:
+    build:
+      context: ./puppy-classification-backend
+      dockerfile: Dockerfile
+    command: gunicorn --bind 0.0.0.0:5000 app:app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./puppy-classification-backend/:/puppy-classification-backend/
+    env_file:
+      - ./settings/dev/.env.dev
+    depends_on:
+      - mysql_db
+    restart: always
 
   # mysql_db:
   #   build: ./backend/mysql
