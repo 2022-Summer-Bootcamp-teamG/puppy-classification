@@ -1,35 +1,37 @@
 version: "3.9"
 
 services:
-    flask:
-    build:
-      context: ./puppy-classification-backend
-      dockerfile: Dockerfile
-    command: gunicorn --bind 0.0.0.0:5000 app:app
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./puppy-classification-backend/:/puppy-classification-backend/
-    env_file:
-      - ./settings/dev/.env.dev
-    depends_on:
-      - mysql_db
-    restart: always
+  backend:
+  build:
+    context: ./puppy-classification-backend
+    dockerfile: Dockerfile
+  command: gunicorn --bind 0.0.0.0:5000 app:app
+  ports:
+    - "5000:5000"
+  volumes:
+    - ./puppy-classification-backend/:/puppy-classification-backend/
+  env_file:
+    - ./settings/dev/.env.dev
+  depends_on:
+    - mysql_db
+  restart: always
 
-  # mysql_db:
-  #   build: ./backend/mysql
-  #   image: mysql:8.0.20
-  #   container_name: mysql_db
-  #   restart: always
-  #   ports:
-  #     - "3306:3306"
-  #   environment:
-  #     MYSQL_DATABASE: summer-bootcamp-2022
-  #     MYSQL_USER: admin
-  #     MYSQL_PASSWORD: siliconvalley
-  #   command:
-  #     - --character-set-server=utf8mb4
-  #     - --collation-server=utf8mb4_unicode_ci
+  mysql_db:
+    build: ./backend/mysql
+    image: mysql:8.0.20
+    container_name: mysql_db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: summer-bootcamp-2022
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: siliconvalley
+      env_file:
+        - ./settings/.env.dev
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
 
   frontend:
     build:
@@ -47,3 +49,41 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - REACT_APP_BACKEND_URL=http://localhost:8000
     tty: true
+
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:3-management
+    command: rabbitmq-server
+    restart: unless-stopped
+    # environment:
+    #   - RABBITMQ_DEFAULT_USER=guest
+    #   - RABBITMQ_DEFAULT_PASS=localhost
+    networks:
+      - app-tier
+    ports:
+      - 5672:5672
+    depends_on:
+      - backend
+
+  celery:
+    build:
+      context: ./puppy-classification-backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./settings/.env
+    depends_on:
+      - "rabbit"
+      - "backend"
+    networks:
+      - app-tier
+    command:
+      [
+        "celery",
+        "-A",
+        "myapp.service.PhotoService",
+        "worker",
+        "--loglevel=info",
+      ]
+    volumes:
+      - ./puppy-classification-backend:/usr/src/app
