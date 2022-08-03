@@ -1,3 +1,6 @@
 [submodule "puppy-classification-frontend"]
 	path = puppy-classification-frontend
 	url = https://github.com/2022-Summer-Bootcamp-teamG/puppy-classification-frontend.git
+[submodule "puppy-classification-backend"]
+	path = puppy-classification-backend
+	url = https://github.com/2022-Summer-Bootcamp-teamG/puppy-classification-backend.git
