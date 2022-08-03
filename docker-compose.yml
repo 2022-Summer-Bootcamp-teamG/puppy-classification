@@ -1,37 +1,31 @@
-version: "3.9"
+version: "3"
 
 services:
-  backend:
-  build:
-    context: ./puppy-classification-backend
-    dockerfile: Dockerfile
-  command: gunicorn --bind 0.0.0.0:5000 app:app
-  ports:
-    - "5000:5000"
-  volumes:
-    - ./puppy-classification-backend/:/puppy-classification-backend/
-  env_file:
-    - ./settings/dev/.env.dev
-  depends_on:
-    - mysql_db
-  restart: always
-
   mysql_db:
-    build: ./backend/mysql
-    image: mysql:8.0.20
+    platform: linux/amd64
+    image: mysql:latest
     container_name: mysql_db
     restart: always
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: summer-bootcamp-2022
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: siliconvalley
-      env_file:
-        - ./settings/.env.dev
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
+      MYSQL_DATABASE: "summer-bootcamp-2022"
+      MYSQL_USER: "admin"
+      MYSQL_PASSWORD: "siliconvalley"
+
+  backend:
+    build:
+      context: ./puppy-classification-backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./puppy-classification-backend/:/app
+    env_file:
+      - ./settings/.env
+    depends_on:
+      - mysql_db
+    restart: always
 
   frontend:
     build:
@@ -40,14 +34,14 @@ services:
     container_name: frontend
     command: ["yarn", "start"]
     ports:
-      - 3000:3000
+      - 80:3000
     volumes:
       - ./puppy-classification-frontend/:/puppy-classification-frontend
+      - build_folder:/puppy-classification-frontend/build
       - ./puppy-classification-frontend/node_modules/:/puppy-classification-frontend/node_modules
     environment:
       - CI=true
       - CHOKIDAR_USEPOLLING=true
-      - REACT_APP_BACKEND_URL=http://localhost:8000
     tty: true
 
   rabbit:
@@ -55,13 +49,14 @@ services:
     image: rabbitmq:3-management
     command: rabbitmq-server
     restart: unless-stopped
-    # environment:
-    #   - RABBITMQ_DEFAULT_USER=guest
-    #   - RABBITMQ_DEFAULT_PASS=localhost
-    networks:
-      - app-tier
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=localhost
+    # networks:
+    #   - app-tier
     ports:
       - 5672:5672
+      - 15672:15672
     depends_on:
       - backend
 
@@ -77,13 +72,13 @@ services:
       - "backend"
     networks:
       - app-tier
-    command:
-      [
-        "celery",
-        "-A",
-        "myapp.service.PhotoService",
-        "worker",
-        "--loglevel=info",
-      ]
+    command: ["celery", "worker", "-A", "task", "--pool", "--loglevel=info"]
     volumes:
       - ./puppy-classification-backend:/usr/src/app
+
+networks:
+  app-tier:
+    driver: bridge
+# 컨테이너 내려도 데이터 유지되도록 함
+volumes:
+  build_folder: null
