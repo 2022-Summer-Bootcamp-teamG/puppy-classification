@@ -8,7 +8,7 @@ services:
     ports:
       - "3306:3306"
     env_file:
-      - ./settings/.env.dev
+      - ./settings/.env
 
   backend:
   build:
@@ -80,7 +80,7 @@ services:
       - "backend"
     networks:
       - app-tier
-    command: ["celery", "worker", "-A", "task", "--pool", "--loglevel=info"]
+    command: ["celery", "worker", "-A", "task", "--pool"]
     volumes:
       - ./puppy-classification-backend:/usr/src/app
 
