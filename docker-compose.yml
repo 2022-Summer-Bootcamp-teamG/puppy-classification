@@ -9,9 +9,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: "summer-bootcamp-2022"
-      MYSQL_USER: "admin"
-      MYSQL_PASSWORD: "siliconvalley"
+      MYSQL_DATABASE: summer-bootcamp-2022
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: siliconvalley
+      MYSQL_ROOT_PASSWORD: siliconvalley
 
   backend:
     build:
@@ -42,6 +43,8 @@ services:
     environment:
       - CI=true
       - CHOKIDAR_USEPOLLING=true
+    networks:
+      - app-tier
     tty: true
 
   rabbit:
@@ -52,8 +55,8 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=localhost
-    # networks:
-    #   - app-tier
+    networks:
+      - app-tier
     ports:
       - 5672:5672
       - 15672:15672
@@ -72,7 +75,7 @@ services:
       - "backend"
     networks:
       - app-tier
-    command: ["celery", "worker", "-A", "task", "--pool", "--loglevel=info"]
+    command: ["celery", "worker", "-A", "task", "--pool"]
     volumes:
       - ./puppy-classification-backend:/usr/src/app
 
