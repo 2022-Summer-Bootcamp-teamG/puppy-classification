@@ -1,19 +1,6 @@
 version: "3"
 
 services:
-  mysql_db:
-    platform: linux/amd64
-    image: mysql:latest
-    container_name: mysql_db
-    restart: always
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: summer-bootcamp-2022
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: siliconvalley
-      MYSQL_ROOT_PASSWORD: siliconvalley
-
   backend:
     build:
       context: ./puppy-classification-backend
@@ -24,8 +11,6 @@ services:
       - ./puppy-classification-backend/:/app
     env_file:
       - ./settings/.env
-    depends_on:
-      - mysql_db
     restart: always
 
   frontend:
@@ -35,7 +20,7 @@ services:
     container_name: frontend
     command: ["yarn", "start"]
     ports:
-      - 80:3000
+      - 3000:3000
     volumes:
       - ./puppy-classification-frontend/:/puppy-classification-frontend
       - build_folder:/puppy-classification-frontend/build
@@ -54,7 +39,7 @@ services:
     restart: unless-stopped
     environment:
       - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=localhost
+      - RABBITMQ_DEFAULT_PASS=guest
     networks:
       - app-tier
     ports:
@@ -63,21 +48,21 @@ services:
     depends_on:
       - backend
 
-  celery:
-    build:
-      context: ./puppy-classification-backend
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    env_file:
-      - ./settings/.env
-    depends_on:
-      - "rabbit"
-      - "backend"
-    networks:
-      - app-tier
-    command: ["celery", "worker", "-A", "task", "--pool"]
-    volumes:
-      - ./puppy-classification-backend:/usr/src/app
+  # celery:
+  #   build:
+  #     context: ./puppy-classification-backend
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ./settings/.env
+  #   depends_on:
+  #     - rabbit
+  #     - backend
+  #   networks:
+  #     - app-tier
+  #   command: ["celery", "worker", "-A", "task", "--pool"]
+  #   volumes:
+  #     - ./puppy-classification-backend:/usr/src/app
 
 networks:
   app-tier:
