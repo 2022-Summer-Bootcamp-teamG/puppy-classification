@@ -1,29 +1,29 @@
 version: "3.9"
 services:
-  mysql_db:
-    platform: linux/amd64
-    image: mysql:latest
-    container_name: mysql_db
-    restart: always
-    ports:
-      - "3306:3306"
-    env_file:
-      - ./settings/.env
+  # mysql_db:
+  #   platform: linux/amd64
+  #   image: mysql:latest
+  #   container_name: mysql_db
+  #   restart: always
+  #   ports:
+  #     - "3306:3306"
+  #   env_file:
+  #     - ./settings/.env
 
   backend:
-  build:
-    context: ./puppy-classification-backend
-    dockerfile: Dockerfile
-  command: gunicorn --bind 0.0.0.0:5000 app:app
-  ports:
-    - "5000:5000"
-  volumes:
-    - ./puppy-classification-backend/:/app
-  env_file:
-    - ./settings/.env
-  depends_on:
-    - mysql_db
-  restart: always
+    build:
+      context: ./puppy-classification-backend
+      dockerfile: Dockerfile
+    command: gunicorn --bind 0.0.0.0:5000 app:app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./puppy-classification-backend/:/app
+    env_file:
+      - ./settings/.env
+    depends_on:
+      - mysql_db
+    restart: always
 
   frontend:
     build:
@@ -64,7 +64,6 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-
     depends_on:
       - backend
 
