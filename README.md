@@ -1,4 +1,3 @@
-# :dog: 지구멍(지구의 멍멍이들)
 
 <p align="center">
 <img width="240" alt="스크린샷 2022-08-06 오전 12 48 08" src="https://user-images.githubusercontent.com/70987007/183113888-5e797b6c-c073-4778-94d0-53116533a57d.png">
