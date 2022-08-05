@@ -9,8 +9,8 @@
 </p>
 <br>
 
-## 💡Tech Stack
-
+## 💡Tech Stack 
+➡️ [Why do we choose these tech stacks for this project?](https://unmarred-pangolin-d1c.notion.site/Tech-stack-d0d34b1b3f97428fab27cbeddc810c3f) 
 <p align="center">
 <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
 <img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=Chart.js&logoColor=white">
