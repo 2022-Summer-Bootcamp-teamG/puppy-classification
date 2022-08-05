@@ -1,26 +1,18 @@
 version: "3.9"
 services:
-  # mysql_db:
-  #   platform: linux/amd64
-  #   image: mysql:latest
-  #   container_name: mysql_db
-  #   restart: always
-  #   ports:
-  #     - "3306:3306"
-  #   env_file:
-  #     - ./settings/.env
-
   backend:
     build:
       context: ./puppy-classification-backend
       dockerfile: Dockerfile
-    command: gunicorn --bind 0.0.0.0:5000 app:app
+    command: gunicorn wsgi:app --bind 0.0.0.0:5000
     ports:
       - "5000:5000"
     volumes:
       - ./puppy-classification-backend/:/app
     env_file:
       - ./settings/.env
+    networks:
+      - app-tier
     depends_on:
       - mysql_db
     restart: always
@@ -32,6 +24,8 @@ services:
     container_name: frontend
     ports:
       - 3000:3000
+    networks:
+      - app-tier
     volumes:
       - ./puppy-classification-frontend/:/puppy-classification-frontend
       - build_folder:/puppy-classification-frontend/build
@@ -57,8 +51,8 @@ services:
     command: rabbitmq-server
     restart: unless-stopped
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=localhost
+      - RABBITMQ_DEFAULT_USER=puppy
+      - RABBITMQ_DEFAULT_PASS=puppy
     networks:
       - app-tier
     ports:
@@ -79,7 +73,7 @@ services:
       - "backend"
     networks:
       - app-tier
-    command: ["celery", "worker", "-A", "task", "--pool"]
+    command: ["celery", "-A", "tasks", "worker", "--loglevel=info"]
     volumes:
       - ./puppy-classification-backend:/usr/src/app
 
