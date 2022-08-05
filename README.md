@@ -42,6 +42,47 @@
 
 ## 📗 API
 
+## 🚀 How to Start
+
+### 1. Clone Repository
+
+```
+https://github.com/2022-Summer-Bootcamp-teamG/puppy-classification.git
+```
+
+### 2. Install Pacakages
+
+```
+$ cd pupppy-classification-frontend
+$ yarn run build
+```
+
+### 3. Set .env file
+
+```bash
+### settings/.env
+# === Database ===
+RDS_HOST =
+RDS_DATABASE =
+RDS_USER =
+RDS_PASSWORD =
+
+# === S3Bucket ===
+S3_ID =
+S3_SECRET_KEY =
+S3_BUCKET_REGION =
+S3_BUCKET_NAME =
+
+```
+
+### 4. Run Docker
+
+```
+$ docker-compose up --build         # build images and run containers
+$ docker-compose down               # stop running containers
+$ docker-compose down -v            # stop running containers and delete its volume
+```
+
 ## 📂 Directory Structure
 
 ```bash
