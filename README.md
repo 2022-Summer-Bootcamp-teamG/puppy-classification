@@ -8,6 +8,8 @@
 </p>
 <br>
 
+## 📒 Medium
+[Introduction](https://medium.com/@rabbit_72/puppy-classification-web-service-with-ai-588be35cded8)
 ## 💡Tech Stack
 
 ➡️ [Why do we choose these tech stacks for this project?](https://unmarred-pangolin-d1c.notion.site/Tech-stack-d0d34b1b3f97428fab27cbeddc810c3f)
