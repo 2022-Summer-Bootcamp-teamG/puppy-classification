@@ -10,6 +10,20 @@
 
 ## 📒 Medium
 [Introduction](https://medium.com/@rabbit_72/puppy-classification-web-service-with-ai-588be35cded8)
+
+## 📹 Demo
+### 견종 이미지 검색
+  <img width="1470" alt="search image" src="https://user-images.githubusercontent.com/77673029/216435152-cb596cb6-323c-459b-9d24-9e4834067d34.gif">
+
+### 견종 조회
+  <img width="1470" alt="read" src="https://user-images.githubusercontent.com/77673029/216435242-bb1da28c-0df4-422b-9522-32d0516206ba.gif">
+  
+### 견종 키워드 검색
+   <img width="1470" alt="search" src="https://user-images.githubusercontent.com/77673029/216435232-65c4ba26-7596-4d6a-a252-26d01e35e5cf.gif">
+
+
+
+
 ## 💡Tech Stack
 
 ➡️ [Why do we choose these tech stacks for this project?](https://unmarred-pangolin-d1c.notion.site/Tech-stack-d0d34b1b3f97428fab27cbeddc810c3f)
